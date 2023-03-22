@@ -22,4 +22,36 @@ public class PageResult<T> implements Serializable {
         this.page = page;
         this.pageSize = pageSize;
     }
+
+    public List<T> getItems() {
+        return items;
+    }
+
+    public void setItems(List<T> items) {
+        this.items = items;
+    }
+
+    public long getCounts() {
+        return counts;
+    }
+
+    public void setCounts(long counts) {
+        this.counts = counts;
+    }
+
+    public long getPage() {
+        return page;
+    }
+
+    public void setPage(long page) {
+        this.page = page;
+    }
+
+    public long getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(long pageSize) {
+        this.pageSize = pageSize;
+    }
 }
