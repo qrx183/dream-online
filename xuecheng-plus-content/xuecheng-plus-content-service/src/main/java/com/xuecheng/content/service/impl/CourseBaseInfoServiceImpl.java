@@ -8,6 +8,7 @@ import com.xuecheng.content.mapper.CourseCategoryMapper;
 import com.xuecheng.content.mapper.CourseMarketMapper;
 import com.xuecheng.content.model.dto.AddCourseDto;
 import com.xuecheng.content.model.dto.CourseBaseInfoDto;
+import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.po.CourseMarket;
@@ -66,36 +67,36 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     public CourseBaseInfoDto createCourseBase(long companyId, AddCourseDto dto) {
 
         // 参数的合法性校验
-        if (StringUtils.isBlank(dto.getName())) {
-            XcPlusException.cast("课程名称为空");
-        }
-
-        if (StringUtils.isBlank(dto.getMt())) {
-
-            XcPlusException.cast("课程分类为空");
-        }
-
-        if (StringUtils.isBlank(dto.getSt())) {
-            XcPlusException.cast("课程分类为空");
-        }
-
-        if (StringUtils.isBlank(dto.getGrade())) {
-            XcPlusException.cast("课程等级为空");
-        }
-
-        if (StringUtils.isBlank(dto.getTeachmode())) {
-
-            XcPlusException.cast("教育模式为空");
-        }
-
-        if (StringUtils.isBlank(dto.getUsers())) {
-            XcPlusException.cast("适应人群为空");
-
-        }
-
-        if (StringUtils.isBlank(dto.getCharge())) {
-            XcPlusException.cast("收费规则为空");
-        }
+//        if (StringUtils.isBlank(dto.getName())) {
+//            XcPlusException.cast("课程名称为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getMt())) {
+//
+//            XcPlusException.cast("课程分类为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getSt())) {
+//            XcPlusException.cast("课程分类为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getGrade())) {
+//            XcPlusException.cast("课程等级为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getTeachmode())) {
+//
+//            XcPlusException.cast("教育模式为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getUsers())) {
+//            XcPlusException.cast("适应人群为空");
+//
+//        }
+//
+//        if (StringUtils.isBlank(dto.getCharge())) {
+//            XcPlusException.cast("收费规则为空");
+//        }
 
         // 向课程基本表course_base写数据
         CourseBase courseBase = new CourseBase();
@@ -123,7 +124,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
      * @param courseId
      * @return
      */
-    private CourseBaseInfoDto getCourseBaseInfo(long courseId) {
+    public CourseBaseInfoDto getCourseBaseInfo(long courseId) {
         // 获取课程基本信息
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
 
@@ -143,6 +144,31 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         courseBaseInfoDto.setStName(stName);
 
         return courseBaseInfoDto;
+    }
+
+    @Override
+    public CourseBaseInfoDto updateCourseBase(long companyId, EditCourseDto dto) {
+        CourseBase course = courseBaseMapper.selectById(dto.getId());
+        CourseMarket courseMarket = courseMarketMapper.selectById(dto.getId());
+        if (course == null) {
+            XcPlusException.cast("课程不存在");
+        }
+        
+        if (course.getCompanyId() != companyId) {
+            XcPlusException.cast("没有权限更新课程");
+        }
+
+        BeanUtils.copyProperties(dto,course);
+
+        int i = courseBaseMapper.insert(course);
+        if (i <= 0) {
+            XcPlusException.cast("更新课程基本信息失败");
+        }
+        i = courseMarketMapper.insert(courseMarket);
+        if (i <= 0){
+            XcPlusException.cast("更新课程营销信息失败");
+        }
+        return getCourseBaseInfo(dto.getId());
     }
 
     /**

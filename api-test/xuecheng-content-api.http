@@ -36,5 +36,10 @@ Content-Type: application/json
   "description": ""
 }
 
+### 根据课程id查询课程信息
+GET http://localhost:63040/content/course/40
+Content-Type: application/json
+
+
 
 
