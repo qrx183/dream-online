@@ -40,6 +40,9 @@ Content-Type: application/json
 GET http://localhost:63040/content/course/40
 Content-Type: application/json
 
+### 删除课程计划
+DELETE http://localhost:63040/content/teachplan/43
+
 
 
 

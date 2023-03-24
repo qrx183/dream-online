@@ -14,5 +14,9 @@ import java.util.List;
  * @author itcast
  */
 public interface CourseTeacherMapper extends BaseMapper<CourseTeacher> {
+    public List<CourseTeacher> selectByCourseId(long id);
 
+    public int deleteByCourseIdAndId(long courseId,long id);
+
+    public int deleteByCourseId(long courseId);
 }

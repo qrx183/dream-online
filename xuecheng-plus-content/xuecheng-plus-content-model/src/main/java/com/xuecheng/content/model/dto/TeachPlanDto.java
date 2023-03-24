@@ -8,6 +8,6 @@ import java.util.List;
 
 @Data
 public class TeachPlanDto extends Teachplan {
-    private List<TeachPlanDto> teachPanTreeNode;
+    private List<TeachPlanDto> teachPlanTreeNodes;
     private TeachplanMedia teachplanMedia;
 }

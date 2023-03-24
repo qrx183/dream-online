@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public RestErrorResponse methodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("[系统异常] {}",e.getMessage(),e);
         BindingResult bindingResult = e.getBindingResult();

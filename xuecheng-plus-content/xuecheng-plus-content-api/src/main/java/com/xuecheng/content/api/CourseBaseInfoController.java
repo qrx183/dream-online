@@ -1,10 +1,7 @@
 package com.xuecheng.content.api;
 
 import com.spring4all.swagger.EnableSwagger2Doc;
-import com.xuecheng.content.model.dto.AddCourseDto;
-import com.xuecheng.content.model.dto.CourseBaseInfoDto;
-import com.xuecheng.content.model.dto.EditCourseDto;
-import com.xuecheng.content.model.dto.QueryCourseParamsDto;
+import com.xuecheng.content.model.dto.*;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.service.CourseBaseInfoService;
 import com.xuecheng.exception.ValidationGroups;
@@ -14,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +25,7 @@ import java.util.List;
 
 @Api(value="课程信息管理接口",tags = "课程信息管理接口")
 @RestController // Controller 和 ResponseBody 返回json数据
+@EnableTransactionManagement
 public class CourseBaseInfoController {
 
     @Autowired
@@ -62,6 +61,12 @@ public class CourseBaseInfoController {
     public CourseBaseInfoDto modifyCourseBase(@RequestBody @Validated(value = ValidationGroups.Modify.class) EditCourseDto editCourseDto) {
         long companyId = 1232141425L;
         return courseBaseInfoService.updateCourseBase(companyId,editCourseDto);
+    }
+
+    @ApiOperation(value = "删除课程")
+    @DeleteMapping("/course/{courseId}")
+    public DeleteCourseResponseDto deleteCourse(@PathVariable long courseId) {
+        return courseBaseInfoService.deleteCourse(courseId);
     }
 
 }

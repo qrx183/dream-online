@@ -3,13 +3,8 @@ package com.xuecheng.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.xuecheng.content.mapper.CourseBaseMapper;
-import com.xuecheng.content.mapper.CourseCategoryMapper;
-import com.xuecheng.content.mapper.CourseMarketMapper;
-import com.xuecheng.content.model.dto.AddCourseDto;
-import com.xuecheng.content.model.dto.CourseBaseInfoDto;
-import com.xuecheng.content.model.dto.EditCourseDto;
-import com.xuecheng.content.model.dto.QueryCourseParamsDto;
+import com.xuecheng.content.mapper.*;
+import com.xuecheng.content.model.dto.*;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.po.CourseMarket;
 import com.xuecheng.content.service.CourseBaseInfoService;
@@ -39,6 +34,14 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
 
     @Autowired
     private CourseCategoryMapper courseCategoryMapper;
+
+    @Autowired
+    private CourseTeacherMapper courseTeacherMapper;
+
+    @Autowired
+    private TeachplanMapper teachplanMapper;
+    @Autowired
+    private TeachplanMediaMapper teachplanMediaMapper;
 
     @Override
     public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
@@ -169,6 +172,33 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
             XcPlusException.cast("更新课程营销信息失败");
         }
         return getCourseBaseInfo(dto.getId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = XcPlusException.class)
+    public DeleteCourseResponseDto deleteCourse(long courseId) {
+        int i = courseTeacherMapper.deleteById(courseId);
+        if(i <= 0) {
+            XcPlusException.cast("删除课程基本信息失败");
+        }
+        i = courseMarketMapper.deleteByCourseId(courseId);
+        if(i <= 0) {
+            XcPlusException.cast("删除课程基本信息失败");
+        }
+        i = courseTeacherMapper.deleteByCourseId(courseId);
+        if(i <= 0) {
+            XcPlusException.cast("删除课程基本信息失败");
+        }
+        i = teachplanMapper.deleteByCourseId(courseId);
+        if(i <= 0) {
+            XcPlusException.cast("删除课程基本信息失败");
+        }
+        i = teachplanMediaMapper.deleteByCourseId(courseId);
+        if(i <= 0) {
+            XcPlusException.cast("删除课程基本信息失败");
+        }
+
+        return new DeleteCourseResponseDto("200","");
     }
 
     /**

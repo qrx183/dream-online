@@ -40,7 +40,7 @@
         <result column="one_courseId"   property="courseId" />
         <result column="one_coursePubId"   property="coursePubId" />
         <!-- 一级中包含多个二级数据 -->
-        <collection property="teachPlanTreeNodes" ofType="com.xuecheng.content.model.dto.TeachplanDto">
+        <collection property="teachPlanTreeNodes" ofType="com.xuecheng.content.model.dto.TeachPlanDto">
             <!-- 二级数据映射 -->
             <id     column="two_id"        property="id" />
             <result column="two_pname"      property="pname" />
@@ -93,4 +93,26 @@
         order by one.orderby,two.orderby
     </select>
 
+
+    <select id="selectDeleteTreeNode" parameterType="long" resultMap="deleteTreeNodeResultMap">
+        select one.id one_id,one.parentid one_parentid,two.id two_id,two.parentid two_parentid from teachplan one left join teachplan two on one.id=two.parentid
+        where one.id = #{id}
+    </select>
+
+    <resultMap id="deleteTreeNodeResultMap" type="com.xuecheng.content.model.dto.DeleteTeachPlanDto">
+        <id     column="one_id"        property="id" />
+        <result column="one_parentid"     property="parentid" />
+        <collection property="deleteTeachPlanDtoList" ofType="com.xuecheng.content.model.dto.DeleteTeachPlanDto">
+            <id     column="two_id"        property="id" />
+            <result column="two_parentid"     property="parentid" />
+        </collection>
+    </resultMap>
+
+    <select id="selectByOrderById" parameterType="int" resultMap="com.xuecheng.content.model.po.Teachplan">
+        select * from teachplan where orderby = #{id};
+    </select>
+
+    <delete id="deleteByCourseId" parameterType="long">
+        delete from teachplan where course_id = #{courseId};
+    </delete>
 </mapper>

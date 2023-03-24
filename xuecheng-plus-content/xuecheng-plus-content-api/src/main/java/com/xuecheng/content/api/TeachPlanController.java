@@ -1,16 +1,14 @@
 package com.xuecheng.content.api;
 
 
+import com.xuecheng.content.model.dto.DeleteCourseResponseDto;
 import com.xuecheng.content.model.dto.SaveTeachPlanDto;
 import com.xuecheng.content.model.dto.TeachPlanDto;
 import com.xuecheng.content.service.TeachPlanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,7 +28,19 @@ public class TeachPlanController {
 
     @ApiOperation("新增修改课程计划")
     @GetMapping("/teachplan")
-    public void getTreeNodes(@RequestBody SaveTeachPlanDto saveTeachPlanDto) {
+    public void saveTeachplan(@RequestBody SaveTeachPlanDto saveTeachPlanDto) {
         teachPlanService.saveTeachPlan(saveTeachPlanDto);
+    }
+
+    @ApiOperation("删除课程计划")
+    @DeleteMapping("/teachplan/{courseId}")
+    public DeleteCourseResponseDto deleteTeachplan(@PathVariable long courseId) {
+        return teachPlanService.deleteTeachPlan(courseId);
+    }
+    
+    @ApiOperation("移动课程计划")
+    @PostMapping("/teachplan/{moveDirection}/{id}")
+    public void moveTeachplan(@PathVariable String moveDirection,@PathVariable long id) {
+
     }
 }
