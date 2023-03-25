@@ -1,5 +1,5 @@
 ### 查询所有课程的信息
-POST http://localhost:63040/content/course/list?pageNo=2&pageSize=2
+POST http://localhost:63010/content/course/list?pageNo=2&pageSize=2
 Content-Type: application/json
 
 {

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "课程教师信息管理")
+@Api(value = "课程教师信息管理",tags = "课程教师信息管理")
 @RestController
 public class CourseTeacherInfoController {
 
@@ -20,7 +20,7 @@ public class CourseTeacherInfoController {
     CourseTeacherInfoService courseTeacherInfoService;
 
     @ApiOperation("课程教师列表查询")
-    @GetMapping("/courseTeacher/list/#{courseId}")
+    @GetMapping("/courseTeacher/list/{courseId}")
     public List<CourseTeacher> list(@PathVariable long courseId) {
         return courseTeacherInfoService.getCourseTeachList(courseId);
     }

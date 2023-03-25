@@ -10,12 +10,14 @@ import com.xuecheng.content.model.dto.TeachPlanDto;
 import com.xuecheng.content.model.po.Teachplan;
 import com.xuecheng.content.service.TeachPlanService;
 import com.xuecheng.exception.XcPlusException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class TeachPlanServiceImpl implements TeachPlanService {
 

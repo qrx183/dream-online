@@ -108,7 +108,7 @@
         </collection>
     </resultMap>
 
-    <select id="selectByOrderById" parameterType="int" resultMap="com.xuecheng.content.model.po.Teachplan">
+    <select id="selectByOrderById" parameterType="int" resultType="com.xuecheng.content.model.po.Teachplan">
         select * from teachplan where orderby = #{id};
     </select>
 
