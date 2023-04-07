@@ -5,10 +5,15 @@ spring:
     nacos:
       server-addr: 192.168.101.65:8848
       config: #配置文件相关配置
-        namespace: dev402
+        namespace: dev_q
         group: xuecheng-plus-project
         file-extension: yaml
         refresh-enabled: true
+        shared-configs:
+          - data-id: feign-${spring.profiles.active}.yaml
+            group: xuecheng-plus-common
+            refresh: true
+
   profiles:
     active: dev   #环境名
 #  datasource:

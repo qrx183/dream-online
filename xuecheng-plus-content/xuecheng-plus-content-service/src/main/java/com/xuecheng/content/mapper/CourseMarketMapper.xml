@@ -18,5 +18,7 @@
     <sql id="Base_Column_List">
         id, charge, price, original_price, qq, wechat, phone, valid_days
     </sql>
-
+    <delete id="deleteByCourseId" parameterType="long">
+        delete from course_market where id = #{courseId};
+    </delete>
 </mapper>

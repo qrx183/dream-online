@@ -30,7 +30,9 @@ public class GlobalExceptionHandler {
     //记录异常
     log.error("系统异常{}",e.getErrMessage(),e);
     //..
-
+    if (e.getErrMessage().equals("不允许访问")){
+        return new RestErrorResponse("您没有权限执行此功能");
+    }
     //解析出异常信息
     String errMessage = e.getErrMessage();
     RestErrorResponse restErrorResponse = new RestErrorResponse(errMessage);

@@ -1,14 +1,17 @@
 package com.xuecheng.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.content.mapper.TeachplanMapper;
-import com.xuecheng.content.model.dto.SaveTeachplanDto;
-import com.xuecheng.content.model.dto.TeachplanDto;
+import com.xuecheng.content.mapper.TeachplanMediaMapper;
+import com.xuecheng.content.model.dto.*;
 import com.xuecheng.content.model.po.Teachplan;
+import com.xuecheng.content.model.po.TeachplanMedia;
 import com.xuecheng.content.service.TeachplanService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +26,9 @@ public class TeachplanServiceImpl implements TeachplanService {
 
     @Autowired
     TeachplanMapper teachplanMapper;
+
+    @Autowired
+    TeachplanMediaMapper teachplanMediaMapper;
 
     @Override
     public List<TeachplanDto> findTeachplanTree(Long courseId) {
@@ -58,6 +64,78 @@ public class TeachplanServiceImpl implements TeachplanService {
             BeanUtils.copyProperties(saveTeachplanDto,teachplan);
             teachplanMapper.updateById(teachplan);
         }
+
+    }
+    @Override
+    public DeleteCourseResponseDto deleteTeachPlan(long id) {
+
+        List<DeleteTeachPlanDto> deleteTeachPlanDtos = teachplanMapper.selectDeleteTreeNode(id);
+        DeleteTeachPlanDto deleteTeachPlanDto = deleteTeachPlanDtos.get(0);
+        if (deleteTeachPlanDto.getParentid() == 0) {
+            // 大章节
+            // 判断有没有子节点,有则不能删除
+            if (deleteTeachPlanDto.getDeleteTeachPlanDtoList() == null) {
+                int i = teachplanMapper.deleteById(id);
+                if (i <= 0) {
+                    XueChengPlusException.cast("删除课程章节失败");
+                }
+            }else{
+                return new DeleteCourseResponseDto("120409","课程计划信息还有子级信息，无法操作");
+            }
+        }else{
+            // 小章节
+            int i = teachplanMapper.deleteById(id);
+            if (i <= 0) {
+                XueChengPlusException.cast("删除课程章节失败");
+            }
+            i = teachplanMediaMapper.deleteByTeachplanId(id);
+
+        }
+        return new DeleteCourseResponseDto("200","");
+
+    }
+
+    @Override
+    public void moveTeachPlan(String moveDirection, long id) {
+        Teachplan teachplan = teachplanMapper.selectById(id);
+        int orderId = teachplan.getOrderby();
+        Teachplan teachplanSwap = new Teachplan();
+        if ("movedown".equals(moveDirection)){
+            teachplanSwap = teachplanMapper.selectByOrderById(orderId+1);
+        }else if("moveup".equals(moveDirection)){
+            teachplanSwap = teachplanMapper.selectByOrderById(orderId-1);
+        }
+        if (teachplanSwap == null) {
+            XueChengPlusException.cast("课程计划移动失败");
+        }
+        int tempId = teachplanSwap.getOrderby();
+        teachplan.setOrderby(tempId);
+        teachplanSwap.setOrderby(orderId);
+        int i = teachplanMapper.updateById(teachplan);
+        int j = teachplanMapper.updateById(teachplanSwap);
+        if (i <= 0 || j <= 0) {
+            XueChengPlusException.cast("课程计划移动失败");
+        }
+    }
+    @Transactional
+    @Override
+    public void associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto) {
+        //课程计划id
+        Long teachplanId = bindTeachplanMediaDto.getTeachplanId();
+        Teachplan teachplan = teachplanMapper.selectById(teachplanId);
+        if(teachplan == null){
+            XueChengPlusException.cast("课程计划不存在");
+        }
+
+        //先删除原有记录,根据课程计划id删除它所绑定的媒资
+        int delete = teachplanMediaMapper.delete(new LambdaQueryWrapper<TeachplanMedia>().eq(TeachplanMedia::getTeachplanId, bindTeachplanMediaDto.getTeachplanId()));
+
+        //再添加新记录
+        TeachplanMedia teachplanMedia = new TeachplanMedia();
+        BeanUtils.copyProperties(bindTeachplanMediaDto,teachplanMedia);
+        teachplanMedia.setCourseId(teachplan.getCourseId());
+        teachplanMedia.setMediaFilename(bindTeachplanMediaDto.getFileName());
+        teachplanMediaMapper.insert(teachplanMedia);
 
     }
 }

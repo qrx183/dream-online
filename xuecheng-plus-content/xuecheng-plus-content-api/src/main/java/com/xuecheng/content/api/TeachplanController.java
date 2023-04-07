@@ -1,5 +1,7 @@
 package com.xuecheng.content.api;
 
+import com.xuecheng.content.model.dto.BindTeachplanMediaDto;
+import com.xuecheng.content.model.dto.DeleteCourseResponseDto;
 import com.xuecheng.content.model.dto.SaveTeachplanDto;
 import com.xuecheng.content.model.dto.TeachplanDto;
 import com.xuecheng.content.service.TeachplanService;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @author Mr.M
+ * @author Mr.Q
  * @version 1.0
  * @description 课程计划管理相关的接口
  * @date 2023/2/14 11:25
@@ -36,6 +38,23 @@ public class TeachplanController {
     @PostMapping("/teachplan")
     public void saveTeachplan( @RequestBody SaveTeachplanDto teachplan){
         teachplanService.saveTeachplan(teachplan);
+    }
+
+    @ApiOperation("删除课程计划")
+    @DeleteMapping("/teachplan/{courseId}")
+    public DeleteCourseResponseDto deleteTeachplan(@PathVariable long courseId) {
+        return teachplanService.deleteTeachPlan(courseId);
+    }
+
+    @ApiOperation("移动课程计划")
+    @PostMapping("/teachplan/{moveDirection}/{id}")
+    public void moveTeachplan(@PathVariable String moveDirection,@PathVariable long id) {
+        teachplanService.moveTeachPlan(moveDirection,id);
+    }
+    @ApiOperation(value = "课程计划和媒资信息绑定")
+    @PostMapping("/teachplan/association/media")
+    public void associationMedia(@RequestBody BindTeachplanMediaDto bindTeachplanMediaDto){
+        teachplanService.associationMedia(bindTeachplanMediaDto);
     }
 
 }

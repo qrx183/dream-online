@@ -2,10 +2,7 @@ package com.xuecheng.content.service;
 
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
-import com.xuecheng.content.model.dto.AddCourseDto;
-import com.xuecheng.content.model.dto.CourseBaseInfoDto;
-import com.xuecheng.content.model.dto.EditCourseDto;
-import com.xuecheng.content.model.dto.QueryCourseParamsDto;
+import com.xuecheng.content.model.dto.*;
 import com.xuecheng.content.model.po.CourseBase;
 
 /**
@@ -22,7 +19,7 @@ public interface CourseBaseInfoService {
      * @param courseParamsDto 查询条件
      * @return 查询结果
      */
-    public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto courseParamsDto);
+    public PageResult<CourseBase> queryCourseBaseList(long companyId, PageParams pageParams, QueryCourseParamsDto courseParamsDto);
 
     /**
      * 新增课程
@@ -46,5 +43,5 @@ public interface CourseBaseInfoService {
      * @return 课程详细信息
      */
     public CourseBaseInfoDto updateCourseBase(Long companyId,EditCourseDto editCourseDto);
-
+    public DeleteCourseResponseDto deleteCourse(long courseId,long companyId);
 }

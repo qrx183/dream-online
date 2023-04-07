@@ -11,5 +11,5 @@ import com.xuecheng.content.model.po.CourseMarket;
  * @author itcast
  */
 public interface CourseMarketMapper extends BaseMapper<CourseMarket> {
-
+    public int deleteByCourseId(long courseId);
 }
